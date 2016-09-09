@@ -33,7 +33,7 @@ void LCD_DrawGlyph(const void* G, LCD_DrawOn DrawOn) {
         break;
     }
 
-    uintptr_t G_Ptr;                                // das finde ich saublöd,
+    uintptr_t G_Ptr;                                // das finde ich saublÃ¶d,
     G_Ptr = (uintptr_t)G;                           // wie geht das besser?
 
 //     uint8_t Width;
@@ -57,17 +57,17 @@ void LCD_DrawGlyph(const void* G, LCD_DrawOn DrawOn) {
             Nibble = upper ? CurrentByte >> 4 : CurrentByte & 0x0F;
             upper = !upper;
             if (Nibble) {
-                if (Nibble == 0x0F) {                   // Nibble = F, also Vordergrund, anzahl im nächsten Nibble
+                if (Nibble == 0x0F) {                   // Nibble = F, also Vordergrund, anzahl im nÃ¤chsten Nibble
                     if (upper) CurrentByte = pgm_read_byte(data++);
                     Nibble = upper ? CurrentByte >> 4 : CurrentByte & 0x0F;
                     upper = !upper;
                     DrawEqualPixels(Nibble + 3, Gamma_Steps, 12);
-                } else {                                // Nibble = Transparanz für ein Pixel
+                } else {                                // Nibble = Transparanz fÃ¼r ein Pixel
                                                         // (0x1 = Hintrergrund .. 0xE = Vordergrund)
                     LCD_DrawPixel(&((*Gamma_Steps)[Nibble]));
                                                         //TODO: Gamma in PROGMEM schreiben?
                 }
-            } else {                    // Nibble = 0, also Hintergrund, anzahl im nächsten Nibble
+            } else {                    // Nibble = 0, also Hintergrund, anzahl im nÃ¤chsten Nibble
                     if (upper) CurrentByte = pgm_read_byte(data++);
                     Nibble = upper ? CurrentByte >> 4 : CurrentByte & 0x0F;
                     upper = !upper;
@@ -101,7 +101,7 @@ void LCD_DrawSpacer(uint8_t width) {
 }
 
 void LCD_DrawChar(char C) {
-    // Adresse für Index C aus Codepage holen
+    // Adresse fÃ¼r Index C aus Codepage holen
     void* GlyphRef = (void*)(pgm_read_word((uintptr_t)CurrentFont + 2) + (uint8_t)C + (uint8_t)C);
     // Glyph-Adresse aus der Codepage auslesen
     void* Glyph = (void*)pgm_read_word(GlyphRef);
@@ -115,7 +115,9 @@ void LCD_DrawChar(char C) {
 void LCD_DrawChar(uint16_t X, uint16_t Y, char C, const LCD_Font* F) {
     CurrentFont = F;
     uint8_t height = pgm_read_byte((uintptr_t)F + 1);
-    LCD_setViewport(LCD_Y_X, X, Y, (uint16_t)LCD_width - X - 1, height); // TODO: LCD_Rotations berücksichtigen
+    LCD_setViewport(LCD_Y_X, X, Y, (uint16_t)LCD_width - X - 1, height); // TODO: LCD_Rotations berÃ¼cksichtigen
+    // durch den Viewport springt der Display-Controller nach einem DrawPixel automatisch in die nÃ¤chste Spalte,
+    // wenn die Spalte davor voll ist.
     LCD_DrawChar(C);
 }
 
